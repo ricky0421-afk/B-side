@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>音乐背后 · B-SIDE</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Serif+SC:wght@300;400;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0a;--bg2:#111111;--bg3:#1a1a1a;
+  --text:#f0ece4;--text2:#9a9488;--text3:#4a4640;
+  --accent:#c8a96e;--accent2:#8b6914;--red:#c0392b;
+  --border:rgba(200,169,110,0.15);--border2:rgba(200,169,110,0.08);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Serif SC',Georgia,serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;opacity:0.4;}
+header{border-bottom:0.5px solid var(--border);padding:20px 40px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(10,10,10,0.92);backdrop-filter:blur(12px);z-index:100;}
+.logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;letter-spacing:4px;color:var(--accent);text-transform:uppercase;}
+.logo span{font-style:italic;font-weight:400;}
+.tagline{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;}
+.hero{padding:80px 40px 60px;max-width:760px;margin:0 auto;text-align:center;}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:24px;opacity:0;animation:fadeUp 0.6s 0.1s forwards;}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(36px,6vw,64px);font-weight:400;line-height:1.1;letter-spacing:-1px;margin-bottom:16px;opacity:0;animation:fadeUp 0.6s 0.2s forwards;}
+.hero-title em{font-style:italic;color:var(--accent);}
+.hero-sub{font-size:15px;color:var(--text2);font-weight:300;line-height:1.7;margin-bottom:48px;opacity:0;animation:fadeUp 0.6s 0.3s forwards;}
+.search-form{opacity:0;animation:fadeUp 0.6s 0.4s forwards;}
+.search-row{display:flex;gap:0;border:0.5px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:16px;transition:border-color 0.2s;}
+.search-row:focus-within{border-color:var(--accent);}
+.search-input{flex:1;background:var(--bg2);border:none;outline:none;padding:16px 20px;font-family:'Noto Serif SC',serif;font-size:16px;color:var(--text);font-weight:300;}
+.search-input::placeholder{color:var(--text3);}
+.search-divider{width:0.5px;background:var(--border);flex-shrink:0;}
+.artist-input{width:200px;background:var(--bg2);border:none;outline:none;padding:16px 20px;font-family:'Noto Serif SC',serif;font-size:16px;color:var(--text);font-weight:300;}
+.artist-input::placeholder{color:var(--text3);}
+.search-btn{background:var(--accent);border:none;padding:16px 28px;color:#0a0a0a;font-family:'DM Mono',monospace;font-size:12px;font-weight:400;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background 0.2s,transform 0.1s;white-space:nowrap;}
+.search-btn:hover{background:#d4b97e;}
+.search-btn:active{transform:scale(0.98);}
+.search-btn:disabled{background:var(--text3);cursor:not-allowed;}
+.examples{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.example-tag{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--text3);border:0.5px solid var(--text3);padding:4px 12px;border-radius:2px;cursor:pointer;transition:color 0.2s,border-color 0.2s;}
+.example-tag:hover{color:var(--accent);border-color:var(--accent);}
+.loading{display:none;text-align:center;padding:60px 40px;max-width:600px;margin:0 auto;}
+.loading.active{display:block;}
+.vinyl{width:80px;height:80px;border-radius:50%;background:conic-gradient(#1a1a1a 0deg,#2a2a2a 10deg,#1a1a1a 20deg,#2a2a2a 30deg,#1a1a1a 40deg,#2a2a2a 50deg,#1a1a1a 60deg,#2a2a2a 70deg,#1a1a1a 80deg,#2a2a2a 90deg,#1a1a1a 100deg,#2a2a2a 110deg,#1a1a1a 120deg,#2a2a2a 130deg,#1a1a1a 140deg,#2a2a2a 150deg,#1a1a1a 160deg,#2a2a2a 170deg,#1a1a1a 180deg,#2a2a2a 190deg,#1a1a1a 200deg,#2a2a2a 210deg,#1a1a1a 220deg,#2a2a2a 230deg,#1a1a1a 240deg,#2a2a2a 250deg,#1a1a1a 260deg,#2a2a2a 270deg,#1a1a1a 280deg,#2a2a2a 290deg,#1a1a1a 300deg,#2a2a2a 310deg,#1a1a1a 320deg,#2a2a2a 330deg,#1a1a1a 340deg,#2a2a2a 350deg);margin:0 auto 24px;animation:spin 2s linear infinite;position:relative;}
+.vinyl::after{content:'';position:absolute;inset:28px;border-radius:50%;background:var(--bg);border:2px solid var(--bg3);}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;animation:blink 1.4s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.result{display:none;max-width:800px;margin:0 auto;padding:0 40px 80px;}
+.result.active{display:block;}
+.track-header{border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);padding:40px 0;margin-bottom:48px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;opacity:0;animation:fadeUp 0.5s 0.1s forwards;}
+.track-meta-top{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:12px;}
+.track-title{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,52px);font-weight:700;line-height:1.05;letter-spacing:-1px;margin-bottom:8px;}
+.track-artist{font-family:'Playfair Display',serif;font-size:20px;font-weight:400;font-style:italic;color:var(--text2);}
+.track-badge{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--accent2);border:0.5px solid var(--accent2);padding:6px 12px;text-transform:uppercase;white-space:nowrap;}
+.article-body{font-size:17px;font-weight:300;line-height:1.9;color:var(--text);}
+.article-body h2{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;letter-spacing:-0.3px;color:var(--text);margin:48px 0 16px;padding-top:48px;border-top:0.5px solid var(--border2);opacity:0;animation:fadeUp 0.5s forwards;}
+.article-body p{margin-bottom:24px;opacity:0;animation:fadeUp 0.5s forwards;}
+.article-body blockquote{border-left:2px solid var(--accent);padding:16px 0 16px 28px;margin:32px 0;font-family:'Playfair Display',serif;font-size:21px;font-style:italic;color:var(--text2);line-height:1.5;opacity:0;animation:fadeUp 0.5s forwards;}
+.article-body strong{color:var(--accent);font-weight:600;}
+.article-footer{margin-top:60px;padding-top:24px;border-top:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;opacity:0;animation:fadeUp 0.5s forwards;}
+.footer-credit{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);letter-spacing:1px;}
+.search-again-btn{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--accent);background:none;border:0.5px solid var(--accent);padding:8px 20px;cursor:pointer;text-transform:uppercase;transition:background 0.2s,color 0.2s;}
+.search-again-btn:hover{background:var(--accent);color:#0a0a0a;}
+.error-msg{display:none;text-align:center;padding:40px;color:var(--red);font-family:'DM Mono',monospace;font-size:13px;letter-spacing:1px;line-height:1.8;}
+.error-msg.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){
+  header{padding:16px 20px;}
+  .hero{padding:48px 20px 40px;}
+  .result{padding:0 20px 60px;}
+  .track-header{grid-template-columns:1fr;gap:16px;}
+  .artist-input{width:120px;}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">B<span>-</span>SIDE</div>
+  <div class="tagline">音乐背后的故事</div>
+</header>
+
+<section class="hero" id="heroSection">
+  <div class="hero-eyebrow">每首歌都有一个故事</div>
+  <h1 class="hero-title">听见<em>背后</em><br>的世界</h1>
+  <p class="hero-sub">输入一首歌或一张专辑，AI 为你挖掘创作背景、时代语境与幕后故事</p>
+  <div class="search-form">
+    <div class="search-row">
+      <input class="search-input" id="songInput" type="text" placeholder="歌曲名称 / 专辑名称" autocomplete="off"/>
+      <div class="search-divider"></div>
+      <input class="artist-input" id="artistInput" type="text" placeholder="艺术家（可选）" autocomplete="off"/>
+      <button class="search-btn" id="searchBtn" onclick="search()">挖掘 →</button>
+    </div>
+    <div class="examples">
+      <span class="example-tag" onclick="fillExample('Hotel California','Eagles')">Hotel California</span>
+      <span class="example-tag" onclick="fillExample('富士山下','陈奕迅')">富士山下</span>
+      <span class="example-tag" onclick="fillExample('Bohemian Rhapsody','Queen')">Bohemian Rhapsody</span>
+      <span class="example-tag" onclick="fillExample('夜空中最亮的星','逃跑计划')">夜空中最亮的星</span>
+      <span class="example-tag" onclick="fillExample('OK Computer','Radiohead')">OK Computer</span>
+    </div>
+  </div>
+</section>
+
+<div class="loading" id="loadingSection">
+  <div class="vinyl"></div>
+  <div class="loading-text" id="loadingText">正在挖掘故事…</div>
+</div>
+
+<div class="error-msg" id="errorSection"></div>
+
+<div class="result" id="resultSection">
+  <div class="track-header">
+    <div>
+      <div class="track-meta-top" id="resultMeta">深度报道</div>
+      <div class="track-title" id="resultTitle"></div>
+      <div class="track-artist" id="resultArtist"></div>
+    </div>
+    <div class="track-badge">B-SIDE 独家</div>
+  </div>
+  <div class="article-body" id="articleBody"></div>
+  <div class="article-footer">
+    <div class="footer-credit">由 AI 整合公开资料生成 · 仅供参考</div>
+    <button class="search-again-btn" onclick="resetSearch()">← 再搜一首</button>
+  </div>
+</div>
+
+<script>
+const LOADING_MSGS = ['正在翻阅唱片档案…','追溯创作年代…','挖掘幕后故事…','整合音乐史料…','拼凑时代碎片…'];
+let loadingTimer;
+
+function fillExample(song, artist) {
+  document.getElementById('songInput').value = song;
+  document.getElementById('artistInput').value = artist;
+  search();
+}
+
+function showSection(name) {
+  ['hero','loading','error','result'].forEach(n => {
+    const el = document.getElementById(n + 'Section');
+    el.style.display = 'none';
+    el.classList.remove('active');
+  });
+  const target = document.getElementById(name + 'Section');
+  target.style.display = '';
+  target.classList.add('active');
+}
+
+function cycleLoadingText() {
+  let i = 0;
+  const el = document.getElementById('loadingText');
+  el.textContent = LOADING_MSGS[0];
+  loadingTimer = setInterval(() => {
+    i = (i + 1) % LOADING_MSGS.length;
+    el.textContent = LOADING_MSGS[i];
+  }, 1800);
+}
+
+function resetSearch() {
+  clearInterval(loadingTimer);
+  document.getElementById('songInput').value = '';
+  document.getElementById('artistInput').value = '';
+  showSection('hero');
+}
+
+function renderMarkdown(text) {
+  const lines = text.split('\n');
+  let html = '';
+  for (const line of lines) {
+    const t = line.trim();
+    if (!t) continue;
+    if (t.startsWith('## ') || t.startsWith('### ')) {
+      html += `<h2>${t.replace(/^##+ /, '')}</h2>`;
+    } else if (t.startsWith('> ')) {
+      html += `<blockquote>${t.slice(2).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}</blockquote>`;
+    } else {
+      html += `<p>${t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}</p>`;
+    }
+  }
+  return html;
+}
+
+function animateArticle() {
+  document.querySelectorAll('.article-body h2, .article-body p, .article-body blockquote, .article-footer')
+    .forEach((el, i) => { el.style.animationDelay = `${0.1 + i * 0.05}s`; });
+}
+
+async function search() {
+  const song = document.getElementById('songInput').value.trim();
+  const artist = document.getElementById('artistInput').value.trim();
+  if (!song) { document.getElementById('songInput').focus(); return; }
+
+  document.getElementById('searchBtn').disabled = true;
+  showSection('loading');
+  cycleLoadingText();
+
+  try {
+    const res = await fetch('/api/story', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ song, artist })
+    });
+
+    const data = await res.json();
+    clearInterval(loadingTimer);
+
+    if (!res.ok || data.error) throw new Error(data.error || '请求失败');
+    if (!data.text) throw new Error('未能获取内容');
+
+    document.getElementById('resultTitle').textContent = song;
+    document.getElementById('resultArtist').textContent = artist || '音乐故事';
+    document.getElementById('resultMeta').textContent = new Date().getFullYear() + ' · 深度报道';
+    document.getElementById('articleBody').innerHTML = renderMarkdown(data.text);
+
+    showSection('result');
+    animateArticle();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  } catch (err) {
+    clearInterval(loadingTimer);
+    const el = document.getElementById('errorSection');
+    el.innerHTML = `获取故事时出错：${err.message}<br><br><button class="search-again-btn" onclick="resetSearch()">← 返回搜索</button>`;
+    showSection('error');
+  }
+
+  document.getElementById('searchBtn').disabled = false;
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Enter') search(); });
+
+// Init: show hero
+showSection('hero');
+</script>
+</body>
+</html>
